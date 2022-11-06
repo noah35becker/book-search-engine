@@ -9,7 +9,7 @@ const expiration = '2h';
 
 module.exports = {
     authMiddleware: function (req, res, next) {
-        let token = req.query.token || req.headers.authorization;  // allows token to be sent via  req.query or headers
+        let token = req.query.token || req.headers.authorization;  // allows token to be sent via req.query or headers
 
         if (req.headers.authorization)  // In the HTTP header, shave off the word 'Bearer' at the beginning of the value
             token = token.split(' ').pop().trim();
@@ -23,7 +23,7 @@ module.exports = {
             req.user = data;
         }catch{
             console.log('Invalid token');
-            return res.status(400).json({ message: 'invalid token!' });
+            return res.status(400).json({message: 'Invalid token'});
         }
 
         next();  // send to next middleware / endpoint
