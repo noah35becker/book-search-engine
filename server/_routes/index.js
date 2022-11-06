@@ -1,8 +1,9 @@
-const router = require('express').Router();
-const path = require('path');
-const apiRoutes = require('./api');
+// const router = require('express').Router();
+// const apiRoutes = require('./api');
 
-router.use('/api', apiRoutes);
+const path = require('path');
+
+// router.use('/api', apiRoutes);
 
 // serve up react front-end in production
 router.use((req, res) => {
