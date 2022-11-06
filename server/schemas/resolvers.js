@@ -23,7 +23,6 @@ const resolvers = {
     Mutation: {
         addUser: async (parent, args) => {
             const user = await User.create(args)
-                .select('-__v -password');
             const token = signToken(user);
 
             return {token, user};
@@ -31,7 +30,6 @@ const resolvers = {
 
         login: async (parent, {email, password}) => {
             const user = await User.findOne({email})
-                .select('-__v -password');
             if (!user)
                 throw new AuthenticationError('Incorrect credentials');
 
@@ -44,11 +42,11 @@ const resolvers = {
             return {token, user};
         },
 
-        saveBook: async (parent, args, context) => {
+        saveBook: async (parent, {input}, context) => {
             if (context.user)
                 return await User.findOneAndUpdate(
                     {_id: context.user._id},
-                    {$addToSet: {savedBooks: args}},  // `$addToSet` prevents duplicate entries (whereas `$push` does not)
+                    {$addToSet: {savedBooks: input}},  // `$addToSet` prevents duplicate entries (whereas `$push` does not)
                     {new: true}
                 ).select('-__v -password')
                 .populate('savedBooks');

@@ -16,7 +16,7 @@ const typeDefs = gql`
 
     type Book{
         bookId: String
-        title: Int
+        title: String
         authors: [String]
         description: String
         image: String
@@ -30,17 +30,18 @@ const typeDefs = gql`
 
 
     input BookInput{
-        bookId: String
-        title: Int
-        authors: [String]
-        description: String
-        image: String
-        link: String
+        bookId: String!
+        title: String!
+        authors: [String]!
+        description: String!
+        image: String!
+        link: String!
     }
 
 
     type Query{
         me: User
+        users: [User]
     }
 
     type Mutation{
