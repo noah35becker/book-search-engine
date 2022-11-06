@@ -1,6 +1,8 @@
 // use this to decode a token and get the user's information out of it
 import decode from 'jwt-decode';
 
+export const localStorageTokenName = 'book_search_engine_id_token';
+
 // create a new class to instantiate for a user
 class AuthService {
   // get user data
@@ -29,18 +31,18 @@ class AuthService {
 
   getToken() {
     // Retrieves the user token from localStorage
-    return localStorage.getItem('id_token');
+    return localStorage.getItem(localStorageTokenName);
   }
 
   login(idToken) {
     // Saves user token to localStorage
-    localStorage.setItem('id_token', idToken);
+    localStorage.setItem(localStorageTokenName, idToken);
     window.location.assign('/');
   }
 
   logout() {
     // Clear user token and profile data from localStorage
-    localStorage.removeItem('id_token');
+    localStorage.removeItem(localStorageTokenName);
     // this will reload the page and reset the state of the application
     window.location.assign('/');
   }
