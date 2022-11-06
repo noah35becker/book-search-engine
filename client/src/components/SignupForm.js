@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
 
-import { createUser } from '../utils/API';
+// IMPORTS
+import React, {useState} from 'react';
+import {Form, Button, Alert} from 'react-bootstrap';
+
 import Auth from '../utils/auth';
 
-const SignupForm = () => {
-  // set initial form state
-  const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
-  // set state for form validation
+import {useMutation} from '@apollo/client';
+import {ADD_USER} from '../utils/mutations'
+
+
+
+// COMPONENT
+export default function SignupForm(){
+  const [userFormData, setUserFormData] = useState({username: '', email: '', password: ''});
   const [validated] = useState(false);
-  // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
+  const [addUser] = useMutation(ADD_USER);
+
+
+  const handleInputChange = event => {
+    const {name, value} = event.target;
+    setUserFormData({...userFormData, [name]: value});
   };
 
-  const handleFormSubmit = async (event) => {
+
+  const handleFormSubmit = async event => {
     event.preventDefault();
 
     // check if form has everything (as per react-bootstrap docs)
@@ -27,17 +35,19 @@ const SignupForm = () => {
       event.stopPropagation();
     }
 
-    try {
-      const response = await createUser(userFormData);
+    try{
+      const {data} = await addUser({
+        variables: {
+          username: userFormData.username,
+          email: userFormData.email,
+          password: userFormData.password
+        }
+      });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
+      const {token, user} = data.addUser;
       console.log(user);
       Auth.login(token);
-    } catch (err) {
+    }catch (err){
       console.error(err);
       setShowAlert(true);
     }
@@ -106,5 +116,3 @@ const SignupForm = () => {
     </>
   );
 };
-
-export default SignupForm;
