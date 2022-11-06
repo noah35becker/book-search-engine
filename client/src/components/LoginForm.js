@@ -1,21 +1,31 @@
-// see SignupForm.js for comments
-import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
 
-import { loginUser } from '../utils/API';
+// IMPORTS
+import React, {useState} from 'react';
+import {Form, Button, Alert} from 'react-bootstrap';
+
 import Auth from '../utils/auth';
 
-const LoginForm = () => {
-  const [userFormData, setUserFormData] = useState({ email: '', password: '' });
+import {useMutation} from '@apollo/client';
+import {LOGIN_USER} from '../utils/mutations'
+
+
+
+// COMPONENT
+export default function LoginForm(){
+  const [userFormData, setUserFormData] = useState({email: '', password: ''});
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
+  const [loginUser] = useMutation(LOGIN_USER);
+
+
+  const handleInputChange = event => {
+    const {name, value} = event.target;
+    setUserFormData({...userFormData, [name]: value});
   };
 
-  const handleFormSubmit = async (event) => {
+
+  const handleFormSubmit = async event => {
     event.preventDefault();
 
     // check if form has everything (as per react-bootstrap docs)
@@ -25,17 +35,18 @@ const LoginForm = () => {
       event.stopPropagation();
     }
 
-    try {
-      const response = await loginUser(userFormData);
+    try{
+      const {data} = await loginUser({
+        variables: {
+          email: userFormData.email,
+          password: userFormData.password
+        }
+      });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
+      const {token, user} = data.login;
       console.log(user);
       Auth.login(token);
-    } catch (err) {
+    }catch (err){
       console.error(err);
       setShowAlert(true);
     }
@@ -47,6 +58,7 @@ const LoginForm = () => {
     });
   };
 
+  
   return (
     <>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
@@ -88,5 +100,3 @@ const LoginForm = () => {
     </>
   );
 };
-
-export default LoginForm;
