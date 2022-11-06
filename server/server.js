@@ -12,7 +12,6 @@ const {ApolloServer} = require('apollo-server-express');
         context: authMiddleware
     });
 const db = require('./config/connection');
-const routes = require('./routes');
 const PORT = process.env.PORT || 3001;
 
 
@@ -23,7 +22,10 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production')
     app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.use(routes);
+
+app.get('/', (req, res) => {  // For any otherwise-undefined GET requests, simply respond with the production-ready front-end code
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  });
 
 
 // Create Apollo server w/ GraphQL schema
