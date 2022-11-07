@@ -19,8 +19,6 @@ export default function SearchBooks(){
   const [searchInput, setSearchInput] = useState('');
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  console.log(savedBookIds);
-
   const [saveBook] = useMutation(SAVE_BOOK);
 
   useEffect(
