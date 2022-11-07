@@ -16,7 +16,9 @@ const resolvers = {
                     .populate('savedBooks');
             
             throw new AuthenticationError('Not logged in');
-        }
+        },
+
+        users: async () => await User.find().populate('savedBooks')
     },
 
 
