@@ -45,11 +45,13 @@ export default function SavedBooks(){
     }
   };
 
-  const bookCount = userData?.me.bookCount || 0;
-  const savedBooks = userData?.me.savedBooks || [];
 
   if (loading)
     return <h2>LOADING...</h2>;
+
+  const bookCount = userData.me.bookCount;
+  const savedBooks = userData.me.savedBooks;
+
 
   return (
     <>
