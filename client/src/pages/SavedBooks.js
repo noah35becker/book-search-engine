@@ -1,6 +1,6 @@
 
 // IMPORTS
-import React, {useState} from 'react';
+import React from 'react';
 import {Navigate} from 'react-router-dom';
 
 import {Jumbotron, Container, CardColumns, Card, Button} from 'react-bootstrap';
@@ -19,12 +19,14 @@ import {useMutation} from '@apollo/client';
 export default function SavedBooks(){
   const {loading, data: userData} = useQuery(GET_ME);
 
-  const [removeBook] = useMutation(REMOVE_BOOK);
-
-  let [bookCount, setBookCount] = useState(userData?.me.bookCount);
-  let [savedBooks, setSavedBooks] = useState(userData?.me.savedBooks);
-
-  console.log(bookCount);
+  const [removeBook] = useMutation(REMOVE_BOOK, {
+    update: (cache, {data: {removeBook}}) => {
+        cache.writeQuery({
+          query: GET_ME,
+          data: {me: {...removeBook}}
+        });
+    }
+  });
 
 
   if (!Auth.loggedIn())
@@ -33,27 +35,21 @@ export default function SavedBooks(){
 
   const handleRemoveBook = async bookId => {
     try{
-      const {data: updatedUserData} = await removeBook({
+      await removeBook({
         variables: {bookId}
       });
 
       removeBookId(bookId);
-
-      setBookCount(updatedUserData.removeBook.bookCount);
-      setSavedBooks(updatedUserData.removeBook.savedBooks);
     } catch (err) {
       console.error(err);
     }
   };
 
+  const bookCount = userData?.me.bookCount || 0;
+  const savedBooks = userData?.me.savedBooks || [];
 
   if (loading)
     return <h2>LOADING...</h2>;
-  else{
-    bookCount = userData?.me.bookCount;
-    savedBooks = userData?.me.savedBooks;
-  }
-
 
   return (
     <>

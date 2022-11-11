@@ -28,11 +28,18 @@ export const LOGIN_USER = gql`
     }
 `;
 
-// returning `username` is superfluous here. No data is really needed in return, but the mutation cannot run without returning something.
 export const SAVE_BOOK = gql`
     mutation ($bookInput: BookInput!){
         saveBook(input: $bookInput){
-            username
+            bookCount
+            savedBooks{
+                bookId
+                title
+                authors
+                description
+                image
+                link
+            }
         }
     }
 `;
