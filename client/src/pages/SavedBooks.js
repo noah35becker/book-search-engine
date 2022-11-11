@@ -71,7 +71,13 @@ export default function SavedBooks(){
               {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
               <Card.Body>
                 <Card.Title>{book.title}</Card.Title>
-                <p className='small'>Authors: {book.authors}</p>
+                <p className='small'>
+                  {book.authors.length === 0 ?
+                      'No author information available'
+                    :
+                      `Author${book.authors.length === 1 ? '' : 's'}: ${book.authors.join(', ')}`
+                  }  
+                </p>
                 <Card.Text>{book.description}</Card.Text>
                 <Button className='btn-block btn-danger' onClick={event => handleRemoveBook(book.bookId)}>
                   Delete this Book!

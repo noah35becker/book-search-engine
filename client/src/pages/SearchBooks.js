@@ -49,13 +49,14 @@ export default function SearchBooks(){
 
       const {items} = await response.json();
 
+
       const booksData = items.map(book => ({
           bookId: book.id,
           title: book.volumeInfo.title,
-          authors: book.volumeInfo.authors || ['No author to display'],
-          description: book.volumeInfo.description,
+          authors: book.volumeInfo.authors || [],
+          description: book.volumeInfo.description || '',
           image: book.volumeInfo.imageLinks?.thumbnail || '',
-          link: book.volumeInfo.previewLink
+          link: book.volumeInfo.previewLink || ''
       }));
 
       setSearchedBooks(booksData);
@@ -128,7 +129,13 @@ export default function SearchBooks(){
             ) : null}
             <Card.Body>
               <Card.Title>{book.title}</Card.Title>
-              <p className='small'>Authors: {book.authors}</p>
+              <p className='small'>
+                {book.authors.length === 0 ?
+                    'No author information available'
+                  :
+                    `Author${book.authors.length === 1 ? '' : 's'}: ${book.authors.join(', ')}`
+                }
+                </p>
               <Card.Text>{book.description}</Card.Text>
               {Auth.loggedIn() && (
                 <Button
