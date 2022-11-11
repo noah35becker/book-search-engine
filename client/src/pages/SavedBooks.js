@@ -78,7 +78,9 @@ export default function SavedBooks(){
                       'No author information available'
                     :
                       `Author${book.authors.length === 1 ? '' : 's'}: ${book.authors.join(', ')}`
-                  }  
+                  }
+                  <br />
+                  <a href={book.link} target='_blank' rel='noopener noreferrer'>View on Google Books</a> 
                 </p>
                 <Card.Text>{book.description}</Card.Text>
                 <Button className='btn-block btn-danger' onClick={event => handleRemoveBook(book.bookId)}>

@@ -135,7 +135,9 @@ export default function SearchBooks(){
                   :
                     `Author${book.authors.length === 1 ? '' : 's'}: ${book.authors.join(', ')}`
                 }
-                </p>
+                <br />
+                <a href={book.link} target='_blank' rel='noopener noreferrer'>View on Google Books</a>
+              </p>
               <Card.Text>{book.description}</Card.Text>
               {Auth.loggedIn() && (
                 <Button
